@@ -1,0 +1,48 @@
+import sqlite3
+
+conn = sqlite3.connect('chatbot.db')
+cursor = conn.cursor()
+
+# Buat tabel user_profiles jika belum ada
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_profiles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL
+    )
+""")
+
+# Buat tabel admin_profiles jika belum ada
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS admin_profiles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL
+    )
+""")
+
+# Buat tabel psychologist_profiles jika belum ada
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS psychologist_profiles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL
+    )
+""")
+
+# Buat tabel activity_logs jika belum ada
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS activity_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        activity_type TEXT NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+""")
+
+# Konfirmasi dan tutup koneksi
+conn.commit()
+conn.close()
+
+print("Tabel tambahan telah dibuat atau sudah ada.")
+
