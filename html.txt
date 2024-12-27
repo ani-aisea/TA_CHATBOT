@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal SpaceBOT</title>
+    <style>
+        /* General Reset */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container Style */
+        .container {
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .button-user {
+            background: linear-gradient(to right, #fff7ad, #ffa9f9);
+            color: black;
+        }
+
+        .button-admin {
+            background: linear-gradient(to right, #cdffd8, #94b9ff);
+            color: black;
+        }
+
+        .button-psychologist {
+            background: linear-gradient(to right, #ff66c4, #ffde59);
+            color: black;
+        }
+
+        /* Sidebar Style */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #1b1b1b;
+            width: 200px;
+            height: 100%;
+            padding: 20px 0;
+            display: none; /* Sembunyikan sidebar secara default */
+        }
+
+        .menu-item {
+            margin: 20px 0;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 20px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .menu-item.profil-user {
+            background: linear-gradient(to right, #fff7ad, #ffa9f9);
+            color: black;
+        }
+
+        .menu-item.panduan-user {
+            background: linear-gradient(to right, #fff7ad, #ffa9f9);
+            color: black;
+        }
+
+        .menu-item.aktivitas-pribadi {
+            background: linear-gradient(to right, #fff7ad, #ffa9f9);
+            color: black;
+        }
+
+        .menu-item.profil-admin {
+            background: linear-gradient(to right, #cdffd8, #94b9ff);
+            color: black;
+        }
+
+        .menu-item.panduan-admin {
+            background: linear-gradient(to right, #cdffd8, #94b9ff);
+            color: black;
+        }
+
+        .menu-item.manajemen-pengguna {
+            background: linear-gradient(to right, #cdffd8, #94b9ff);
+            color: black;
+        }
+
+        .menu-item.system-maintenance {
+            background: linear-gradient(to right, #cdffd8, #94b9ff);
+            color: black;
+        }
+
+        .menu-item.profil-psikolog {
+            background: linear-gradient(to right, #ff66c4, #ffde59);
+            color: black;
+        }
+
+        .menu-item.panduan-psikolog {
+            background: linear-gradient(to right, #ff66c4, #ffde59);
+            color: black;
+        }
+
+        .menu-item.aktivitas-konseling {
+            background: linear-gradient(to right, #ff66c4, #ffde59);
+            color: black;
+        }
+
+        .main {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        
+        /* Chat System */
+        .chat-container {
+            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 60%;
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background-color: #ffa9f9;
+            color: black;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background-color: #fff7ad;
+            color: black;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .input-area input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        .input-area button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            background-color: #ffa9f9;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .input-area button:hover {
+            background-color: #fff7ad;
+        }
+
+        #profilSection,
+        #profilSectionAdmin,
+        #profilSectionPsychologist {
+            background-color: #222;
+            padding: 15px;
+            margin: 10px 20px; /* Tambahkan margin */
+            border-radius: 10px;
+            border: 1px solid #fff;
+            width: calc(100% - 40px); /* Sesuaikan lebar */
+         }
+
+        #profilSection input,
+        #profilSectionAdmin input,
+        #profilSectionPsychologist input {
+            width: 90%; /* Sesuaikan lebar input */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+       
+        #profilSection button,
+        #profilSectionAdmin button,
+        #profilSectionPsychologist button {
+            padding: 10px 20px;
+            background-color: #fff7ad;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #profilSection button:hover {
+            background-color: #ffa9f9;
+    }
+
+        #profilSectionAdmin button:hover {
+            background-color: #94b9ff;
+    }  
+
+        #profilSectionPsychologist button:hover {
+            background-color: #ff66c4;
+    }   
+
+     .chat-container {
+        height: calc(100vh - 100px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 50px; /* Tambahkan padding bawah */
+    }
+
+    .watermark {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+    }
+
+    /* Section Panduan */
+    #panduanSection {
+        display: none;
+        margin-top: 10px;
+        background-color: #222;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #fff;
+        width: calc(100% - 40px);
+    }
+
+    #panduanSection iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+    }
+
+    </style>
+</head>
+<body>
+    <!-- Halaman Login -->
+    <div id="loginPage" class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo Personal SpaceBOT" style="width: 300px; height: auto;">
+        </div>
+        <div class="title">Selamat Datang di Personal SpaceBOT</div>
+        <div class="buttons">
+            <button class="button button-user" onclick="goToPage('user')">Masuk sebagai User</button>
+            <button class="button button-admin" onclick="goToPage('admin')">Masuk sebagai Admin</button>
+            <button class="button button-psychologist" onclick="goToPage('psychologist')">Masuk sebagai Psikolog</button>
+        </div>
+    </div>
+
+    <!-- Halaman Home User -->
+    <div id="homeUserPage" style="display: none;">
+        <div class="sidebar">
+            <div class="menu-item profil-user">Profil User</div>
+            <div class="menu-item panduan-user">Panduan</div>
+            <div class="menu-item aktivitas-pribadi" onclick="updateActivitySection()">Aktivitas Pribadi</div>
+        </div>
+        <div class="main">
+            <h2>Halo User! Bagaimana perasaanmu hari ini?</h2>
+        <div class="chat-container">
+                <div class="chat-messages" id="userMessages"></div>
+                <div class="input-area">
+                    <input type="text" id="userMessage" placeholder="Ketik pesan Anda di sini">
+                    <button onclick="sendMessage('user')">Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="profilSection" style="display: none; margin-top: 10px;">
+        <h3>Profil Anda</h3>
+        <form>
+            <label for="userName">Nama:</label><br>
+            <input type="text" id="userName" placeholder="Masukkan nama Anda"><br><br>
+            <label for="userEmail">Email:</label><br>
+            <input type="email" id="userEmail" placeholder="Masukkan email Anda"><br><br>
+            <button type="button" onclick="saveProfile()">Simpan</button>
+        </form>
+    </div>
+     <div id="panduanSection" style="display: none;">
+            <iframe id="panduanIframe" src="" style="width: 100%; height: 600px; border: none;"></iframe>
+            <button onclick="goToDashboard()">Kembali ke Dashboard</button>
+        </div>
+    <div id="activitySection" style="display: none;">
+        <h3>Aktivitas Pribadi</h3>
+        <p>Total Riwayat Chat: <span id="totalChat">0</span></p>
+        <p>Total Hari Login: <span id="totalLogin">0</span></p>
+        <p>Riwayat Konseling: <span id="counselingHistory">Belum ada riwayat</span></p>
+        <button onclick="hideActivity()">Tutup</button>
+    </div>
+</div>
+    
+    <!-- Halaman Home Admin -->
+    <div id="homeAdminPage" style="display: none;">
+        <div class="sidebar">
+            <div class="menu-item profil-admin">Profil Admin</div>
+            <div class="menu-item panduan-admin">Panduan</div>
+            <div class="menu-item manajemen-pengguna">Manajemen Pengguna</div>
+            <div class="menu-item system-maintenance">System Maintenance</div>
+        </div>
+        <div class="main">
+            <h2>Halo Admin! Apa yang ingin kamu kelola hari ini?</h2>
+        </div>
+    </div>
+       <div id="profilSectionAdmin" style="display: none;">
+    <h3>Profil Admin</h3>
+    <form>
+        <label for="adminName">Nama:</label><br>
+        <input type="text" id="adminName" placeholder="Masukkan nama Anda"><br><br>
+        <label for="adminEmail">Email:</label><br>
+        <input type="email" id="adminEmail" placeholder="Masukkan email Anda"><br><br>
+        <button type="button" onclick="saveAdminProfile()">Simpan</button>
+    </form>
+</div>
+     <div id="panduanSection" style="display: none;">
+            <iframe id="panduanIframe" src="" style="width: 100%; height: 600px; border: none;"></iframe>
+            <button onclick="goToDashboard()">Kembali ke Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Halaman Home Psikolog -->
+    <div id="homePsychologistPage" style="display: none;">
+        <div class="sidebar">
+            <div class="menu-item profil-psikolog">Profil Psikolog</div>
+            <div class="menu-item panduan-psikolog">Panduan</div>
+            <div class="menu-item aktivitas-konseling">Aktivitas Konseling</div>
+        </div>
+        <div class="main">
+            <h2>Halo Psikolog! Siap membantu pengguna hari ini?</h2>
+        </div>
+    </div>
+    <div id="profilSectionPsychologist" style="display: none; margin-top: 10px;">
+    <h3>Profil Psikolog</h3>
+        <form>
+            <label for="psychologistName">Nama:</label><br>
+            <input type="text" id="psychologistName" placeholder="Masukkan nama Anda"><br><br>
+            <label for="psychologistEmail">Email:</label><br>
+            <input type="email" id="psychologistEmail" placeholder="Masukkan email Anda"><br><br>
+            <button type="button" onclick="saveProfile('psychologist')">Simpan</button>
+        </form>
+    </div>
+    <div id="panduanSection" style="display: none;">
+            <iframe id="panduanIframe" src="" style="width: 100%; height: 600px; border: none;"></iframe>
+            <button onclick="goToDashboard()">Kembali ke Dashboard</button>
+        </div>
+    </div>
+
+            <div class="watermark">
+            Copyright Tugas Akhir - Maryani Umar_5023201009 - Teknik Biomedik ITS 2020
+        </div>
+
+    <script>
+        let currentPage = ''; // Menyimpan halaman yang aktif
+
+        function goToPage(role) {
+            // Sembunyikan semua halaman
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('homeUserPage').style.display = 'none';
+            document.getElementById('homeAdminPage').style.display = 'none';
+            document.getElementById('homePsychologistPage').style.display = 'none';
+
+            // Sembunyikan semua sidebar
+            const sidebars = document.querySelectorAll('.sidebar');
+            sidebars.forEach(sidebar => {
+                sidebar.style.display = 'none';
+            });
+
+            // Tampilkan halaman sesuai peran
+            if (role === 'user') {
+                document.getElementById('homeUserPage').style.display = 'block';
+                currentPage = 'homeUserPage';
+                document.querySelector('#homeUserPage .sidebar').style.display = 'block';
+            } else if (role === 'admin') {
+                document.getElementById('homeAdminPage').style.display = 'block';
+                currentPage = 'homeAdminPage';
+                document.querySelector('#homeAdminPage .sidebar').style.display = 'block';
+            } else if (role === 'psychologist') {
+                document.getElementById('homePsychologistPage').style.display = 'block';
+                currentPage = 'homePsychologistPage';
+                document.querySelector('#homePsychologistPage .sidebar').style.display = 'block';
+            }
+        }
+
+       async function sendMessage(role) {
+    const message = document.getElementById("userMessage").value.trim();
+
+    if (!message) {
+        alert("Pesan tidak boleh kosong.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            // Tampilkan pesan yang dikirim dan diterima
+            const container = document.getElementById("userMessages");
+        
+            // Pesan yang dikirim user
+            const sentMessage = document.createElement("div");
+            sentMessage.className = "message sent";
+            sentMessage.innerText = message;
+            container.appendChild(sentMessage);
+
+            // Respon dari bot
+            const receivedMessage = document.createElement("div");
+            receivedMessage.className = "message received";
+            receivedMessage.innerText = result.response;
+            container.appendChild(receivedMessage);
+        } else {
+            alert(result.error); // Tampilkan error dari server
+        }
+    } catch (error) {
+        alert("Error: Gagal menghubungi server."); // Tampilkan error jika server tidak dapat dijangkau
+    }
+}
+
+        // Tangkap elemen "Profil User" dan "profilSection"
+        const userProfileButton = document.querySelector('.menu-item.profil-user');
+        userProfileButton.addEventListener('click', () => toggleProfileSection('user'));
+
+        // Tangkap elemen "Profil Admin" dan "profilSection"
+        const adminProfileButton = document.querySelector('.menu-item.profil-admin');
+        adminProfileButton.addEventListener('click', () => toggleProfileSection('admin'));
+
+        // Tangkap elemen "Profil Psikolog" dan "profilSection"
+        const psychologistProfileButton = document.querySelector('.menu-item.profil-psikolog');
+        psychologistProfileButton.addEventListener('click', () => toggleProfileSection('psychologist'));
+
+        // Tangkap elemen "Panduan User" dan "panduanSection"
+        const userPanduanButton = document.querySelector('.menu-item.panduan-user');
+        userPanduanButton.addEventListener('click', () => showPanduan('user'));
+
+        // Tangkap elemen "Panduan Admin" dan "panduanSection"
+        const adminPanduanButton = document.querySelector('.menu-item.panduan-admin');
+        adminPanduanButton.addEventListener('click', () => showPanduan('admin'));
+
+        // Tangkap elemen "Panduan Psikolog" dan "panduanSection"
+        const psychologistPanduanButton = document.querySelector('.menu-item.panduan-psikolog');
+        psychologistPanduanButton.addEventListener('click', () => showPanduan('psychologist'));
+
+        // Tambahkan event listener untuk toggle section profil
+        function toggleProfileSection(role) {
+            let button, section;
+
+            // Pilih elemen tombol dan profil section berdasarkan role
+            if (role === 'user') {
+                button = document.querySelector('.menu-item.profil-user');
+                section = document.getElementById('profilSection');
+            } else if (role === 'admin') {
+                button = document.querySelector('.menu-item.profil-admin');
+                section = document.getElementById('profilSectionAdmin');
+            } else if (role === 'psychologist') {
+                button = document.querySelector('.menu-item.profil-psikolog');
+                section = document.getElementById('profilSectionPsychologist');
+            }
+
+            // Tampilkan atau sembunyikan section profil
+            if (section.style.display === 'none' || section.style.display === '') {
+                button.insertAdjacentElement('afterend', section); // Pindahkan section di bawah tombol
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+    function showPanduan(role) {
+        let pdfPath;
+
+        // Pilih file PDF berdasarkan role
+        if (role === 'user') {
+            pdfPath = 'Panduan User.pdf';
+        } else if (role === 'admin') {
+            pdfPath = 'Panduan Admin.pdf';
+        } else if (role === 'psychologist') {
+            pdfPath = 'Panduan Psikolog.pdf';
+        }
+
+    async function updateActivitySection() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/user/activity');
+        const data = await response.json();
+        document.getElementById('totalChat').innerText = data.totalChat || 0;
+        document.getElementById('totalLogin').innerText = data.totalLogin || 0;
+        document.getElementById('counselingHistory').innerText = data.counselingHistory || 'Belum ada riwayat';
+        } catch (error) {
+            console.error('Gagal memperbarui aktivitas:', error);
+        }
+    }
+        // Sembunyikan tampilan awal dashboard
+        const homeUserPage = document.getElementById('homeUserPage');
+        const homeAdminPage = document.getElementById('homeAdminPage');
+        const homePsychologistPage = document.getElementById('homePsychologistPage');
+        
+        // Sembunyikan semua halaman
+        document.getElementById('homeUserPage').style.display = 'none';
+        document.getElementById('homeAdminPage').style.display = 'none';
+        document.getElementById('homePsychologistPage').style.display = 'none';
+
+        // Tampilkan section panduan dan set src iframe ke file PDF yang dipilih
+        const panduanSection = document.getElementById('panduanSection');
+        const panduanIframe = document.getElementById('panduanIframe');
+        panduanIframe.src = pdfPath;
+        panduanSection.style.display = 'block'; // Tampilkan section panduan
+
+        // Pastikan sidebar tetap terlihat
+        const sidebars = document.querySelectorAll('.sidebar');
+        sidebars.forEach(sidebar => {
+            sidebar.style.display = 'block'; // Pastikan sidebar ditampilkan
+        });
+    }
+
+    function goToDashboard() {
+        // Sembunyikan section panduan
+        const panduanSection = document.getElementById('panduanSection');
+        panduanSection.style.display = 'none';
+
+        
+            // Tampilkan kembali halaman yang sesuai
+            document.getElementById(currentPage).style.display = 'block';
+    }
+
+        async function saveProfile() {
+    const name = document.getElementById("userName").value;
+    const email = document.getElementById("userEmail").value;
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/api/user/profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email }),
+        });
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+        } else {
+            alert(result.error);
+        }
+    } catch (error) {
+        alert("Gagal menghubungi server.");
+    }
+}
+
+        function saveAdminProfile() {
+        console.log('Fungsi saveAdminProfile dipanggil.');
+        const name = document.getElementById('adminName').value.trim();
+        const email = document.getElementById('adminEmail').value.trim();
+
+        if (!name || !email) {
+            alert('Nama dan email harus diisi.');
+            return;
+        }
+
+        console.log('Data yang dikirim:', { name, email });
+
+        fetch('http://127.0.0.1:5000/api/admin/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respons dari server:', data);
+                if (data.status === 'success') {
+                    alert('Profil admin berhasil disimpan!');
+                } else {
+                    alert(`Gagal menyimpan profil: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error saat menghubungi server:', error);
+                alert('Gagal menghubungi server.');
+            });
+    }
+
+        function showPsychologistProfile() {
+    // Tampilkan section profil psikolog
+    document.getElementById('profilSectionPsychologist').style.display = 'block';
+
+    // Sembunyikan elemen lainnya
+    document.getElementById('panduanSection').style.display = 'none';
+    document.querySelector('#homePsychologistPage .main').style.display = 'none';
+}
+
+function showPsychologistPanduan() {
+    // Tampilkan panduan
+    document.getElementById('panduanSection').style.display = 'block';
+
+    // Sembunyikan elemen lainnya
+    document.getElementById('profilSectionPsychologist').style.display = 'none';
+    document.querySelector('#homePsychologistPage .main').style.display = 'none';
+}
+
+function saveProfile(role) {
+    const nameInputId = role === 'psychologist' ? 'psychologistName' : '';
+    const emailInputId = role === 'psychologist' ? 'psychologistEmail' : '';
+
+    const name = document.getElementById(nameInputId).value.trim();
+    const email = document.getElementById(emailInputId).value.trim();
+
+    if (!name || !email) {
+        alert('Nama dan email harus diisi.');
+        return;
+    }
+
+    // Simpan profil ke server
+    fetch(`http://127.0.0.1:5000/api/${role}/profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.status === 'success') {
+                alert(`Profil ${role} berhasil disimpan!`);
+            } else {
+                alert(`Gagal menyimpan profil ${role}.`);
+            }
+        })
+        .catch(() => {
+            alert(`Gagal menghubungi server untuk ${role}.`);
+        });
+}
+
+
+        let totalChat = 5; // Ganti dengan logika untuk menghitung total riwayat chat
+        let totalLogin = 10; // Ganti dengan logika untuk menghitung total hari login
+        let counselingHistory = "Konseling 1: 01/01/2023, Konseling 2: 02/01/2023"; // Ganti dengan data riwayat konseling
+
+        function showActivity() {
+            document.getElementById('activitySection').style.display = 'block';
+            document.getElementById('totalChat').innerText = totalChat;
+            document.getElementById('totalLogin').innerText = totalLogin;
+            document.getElementById('counselingHistory').innerText = counselingHistory;
+        }
+
+        function hideActivity() {
+            document.getElementById('activitySection').style.display = 'none';
+        }
+        async function updateActivitySection() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/user/activity');
+        const data = await response.json();
+        document.getElementById('totalChat').innerText = data.totalChat || 0;
+        document.getElementById('totalLogin').innerText = data.totalLogin || 0;
+        document.getElementById('counselingHistory').innerText = data.counselingHistory || 'Belum ada riwayat';
+    } catch (error) {
+        console.error('Gagal memperbarui aktivitas:', error);
+    }
+}
+    function loadUserManagement() {
+    fetch('http://127.0.0.1:5000/api/admin/user_data')
+        .then(response => response.json())
+        .then(data => {
+            const tableRows = data.map(user => `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.login_count}</td>
+                </tr>
+            `).join('');
+            const tableHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Pengguna</th>
+                            <th>Email</th>
+                            <th>Jumlah Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('adminData').innerHTML = tableHTML;
+        });
+}
+function loadUserActivity() {
+    fetch('http://127.0.0.1:5000/api/user/activity')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalChat').innerText = data.total_chat;
+            document.getElementById('totalLogin').innerText = data.total_login;
+            document.getElementById('counselingHistory').innerText = data.counseling_history.join(', ');
+        });
+}
+
+
+    </script>
+</body>
+</html>
